@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vượt Link Nhận Key</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #2a4d69, #4b86b4);
+            min-height: 100vh;
+            padding: 20px;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: rgba(0, 15, 30, 0.85);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+        }
+        
+        header {
+            text-align: center;
+            padding: 20px 0;
+            margin-bottom: 20px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .instructions {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(0, 30, 60, 0.5);
+            border-radius: 10px;
+        }
+        
+        .instructions ol {
+            padding-left: 20px;
+            margin-top: 15px;
+        }
+        
+        .instructions li {
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+        
+        .links-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .link-card {
+            flex: 1;
+            min-width: 300px;
+            background: rgba(0, 20, 40, 0.8);
+            border-radius: 10px;
+            padding: 20px;
+            border: 1px solid rgba(100, 200, 255, 0.3);
+            text-align: center;
+        }
+        
+        .link-card h3 {
+            margin-bottom: 15px;
+            color: #4da6ff;
+        }
+        
+        .link {
+            display: block;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            margin: 15px 0;
+            color: #4da6ff;
+            word-break: break-all;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .link:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-3px);
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 25px;
+            background: linear-gradient(135deg, #4da6ff, #0066cc);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            margin-top: 20px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .info-box {
+            background: rgba(0, 30, 60, 0.5);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 30px;
+            font-size: 0.9rem;
+        }
+        
+        .info-box p {
+            margin-bottom: 10px;
+        }
+        
+        .session-info {
+            font-family: monospace;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 5px 10px;
+            border-radius: 4px;
+            word-break: break-all;
+            margin-top: 10px;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px 0 10px;
+            opacity: 0.7;
+            font-size: 0.9rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-key"></i> Vượt Link Nhận Key</h1>
+            <p>Hoàn thành 2 thử thách để nhận key truy cập</p>
+        </header>
+        
+        <div class="instructions">
+            <h2><i class="fas fa-info-circle"></i> Hướng Dẫn</h2>
+            <ol>
+                <li>Nhấn vào từng link bên dưới để mở trong tab mới</li>
+                <li>Mỗi link chỉ được tính một lần trong ngày</li>
+                <li>Truy cập phải thực hiện từ bên ngoài (không phải reload)</li>
+                <li>Sau khi truy cập cả 2 link, nhấn nút "Nhận Key"</li>
+                <li>Hệ thống sẽ kiểm tra IP và session của bạn để xác minh</li>
+            </ol>
+        </div>
+        
+     
+    <div class="links-container">
+        <div class="link-card">
+            <h3><i class="fas fa-link"></i> Link 1</h3>
+            <a href="{{ links[0] }}?session_id={{ session_id }}" class="link" target="_blank">
+                {{ links[0] }}
+            </a>
+            <p>Nhấn để mở link 1 trong tab mới</p>
+        </div>
+        
+        <div class="link-card">
+            <h3><i class="fas fa-link"></i> Link 2</h3>
+            <a href="{{ links[1] }}?session_id={{ session_id }}" class="link" target="_blank">
+                {{ links[1] }}
+            </a>
+            <p>Nhấn để mở link 2 trong tab mới</p>
+        </div>
+    </div>
+    
+
+        
+        <div style="text-align: center;">
+            <a href="{{ url_for('get_key', session_id=session_id) }}" class="btn">
+                <i class="fas fa-key"></i> Nhận Key Sau Khi Vượt Link
+            </a>
+        </div>
+        
+        <div class="info-box">
+            <p><i class="fas fa-info-circle"></i> Thông tin phiên:</p>
+            <div class="session-info">{{ session_id }}</div>
+            <p>- Mỗi phiên chỉ có hiệu lực trong 24 giờ</p>
+            <p>- Bạn cần truy cập cả 2 link để nhận key</p>
+            <p>- Key sẽ hết hạn sau 24 giờ</p>
+        </div>
+        
+        <footer>
+            <p>Hệ thống vượt link nhận key &copy; 2023</p>
+        </footer>
+    </div>
+
+<div style="text-align: center; margin-top: 30px;">
+    <button onclick="generateKey()" class="btn">
+        <i class="fas fa-key"></i> Nhận Key Ngay
+    </button>
+</div>
+
+<script src="script.js"></script>
+
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</body>
+</html>
