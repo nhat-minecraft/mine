@@ -1,5 +1,5 @@
 // script.js
-let API_URL = 'https://14.167.71.156/api';
+let API_URL = 'https://14.167.71.156:5000/api';
 
 // Tạo session ID và lưu vào localStorage
 function getOrCreateSessionId() {
