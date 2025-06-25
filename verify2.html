@@ -112,79 +112,86 @@
         </div>
     </div>
 
-    <script>
-        // Lấy session_id từ URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const sessionId = urlParams.get('session_id');
-        
-        // Lưu session_id vào localStorage
-        if (sessionId) {
-            localStorage.setItem('session_id', sessionId);
-        }
-        
-        // Gọi API xác thực truy cập
-        async function verifyAccess() {
-            try {
-                const response = await fetch('http://YOUR_PUBLIC_IP:5000/api/verify-link', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ 
-                        url: window.location.href.split('?')[0], // Lấy URL hiện tại không bao gồm query
-                        session_id: sessionId
-                    })
-                });
-                
-                const data = await response.json();
-                
-                if (data.status === 'success') {
-                    showResult('Xác thực thành công! Truy cập của bạn đã được ghi nhận.', 'success');
-                } else {
-                    showResult('Lỗi: ' + (data.message || 'Không thể xác thực truy cập'), 'error');
-                }
-            } catch (error) {
-                showResult('Lỗi kết nối đến server. Vui lòng thử lại sau.', 'error');
+
+
+<script>
+    // Lấy session_id từ localStorage
+    const sessionId = localStorage.getItem('session_id');
+    
+    // Định nghĩa URL cố định cho link này
+    const VERIFY_URL = "https://yeumoney.com/x8N-Vex";
+    
+    // Gọi API xác thực truy cập
+    async function verifyAccess() {
+        try {
+            const response = await fetch('https://40cb-2001-ee0-78c9-da10-cad9-d2ff-fe31-f9a4.ngrok-free.app/api/verify-link', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({ 
+                    url: VERIFY_URL,
+                    session_id: sessionId
+                })
+            });
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
             }
+            
+            const data = await response.json();
+            
+            if (data.status === 'success') {
+                showResult('Xác thực thành công! Truy cập của bạn đã được ghi nhận.', 'success');
+            } else {
+                showResult('Lỗi: ' + (data.message || 'Không thể xác thực truy cập'), 'error');
+            }
+        } catch (error) {
+            console.error('Lỗi khi xác thực:', error);
+            showResult('Lỗi kết nối đến server. Vui lòng thử lại sau.', 'error');
         }
+    }
+    
+    // Hiển thị kết quả
+    function showResult(message, type) {
+        document.querySelector('.loading').style.display = 'none';
         
-        // Hiển thị kết quả
-        function showResult(message, type) {
-            document.querySelector('.loading').style.display = 'none';
+        const messageElement = document.getElementById('message-text');
+        messageElement.textContent = message;
+        
+        const resultMessage = document.getElementById('result-message');
+        resultMessage.className = `message ${type}`;
+        resultMessage.style.display = 'block';
+        
+        const redirectSection = document.getElementById('redirect-section');
+        redirectSection.style.display = 'block';
+        
+        // Thiết lập chuyển hướng
+        const countdownElement = document.getElementById('countdown');
+        const redirectBtn = document.getElementById('redirect-btn');
+        redirectBtn.href = `index.html`;
+        
+        let seconds = 5;
+        const countdown = setInterval(() => {
+            seconds--;
+            countdownElement.textContent = seconds;
             
-            const messageElement = document.getElementById('message-text');
-            messageElement.textContent = message;
-            
-            const resultMessage = document.getElementById('result-message');
-            resultMessage.className = `message ${type}`;
-            resultMessage.style.display = 'block';
-            
-            const redirectSection = document.getElementById('redirect-section');
-            redirectSection.style.display = 'block';
-            
-            // Thiết lập chuyển hướng
-            const countdownElement = document.getElementById('countdown');
-            const redirectBtn = document.getElementById('redirect-btn');
-            redirectBtn.href = `index.html?session_id=${sessionId}`;
-            
-            let seconds = 5;
-            const countdown = setInterval(() => {
-                seconds--;
-                countdownElement.textContent = seconds;
-                
-                if (seconds <= 0) {
-                    clearInterval(countdown);
-                    window.location.href = redirectBtn.href;
-                }
-            }, 1000);
-            
-            redirectBtn.addEventListener('click', () => {
+            if (seconds <= 0) {
                 clearInterval(countdown);
                 window.location.href = redirectBtn.href;
-            });
-        }
+            }
+        }, 1000);
         
-        // Bắt đầu xác thực khi trang tải xong
-        document.addEventListener('DOMContentLoaded', verifyAccess);
-    </script>
+        redirectBtn.addEventListener('click', () => {
+            clearInterval(countdown);
+            window.location.href = redirectBtn.href;
+        });
+    }
+    
+    // Bắt đầu xác thực khi trang tải xong
+    document.addEventListener('DOMContentLoaded', verifyAccess);
+</script>
     
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </body>

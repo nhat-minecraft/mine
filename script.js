@@ -1,7 +1,5 @@
 // script.js
-let API_URL = 'http://14.167.71.156:5000/api';
-const LINK_1 = "https://yeumoney.com/x8N-Vex";
-const LINK_2 = "https://yeumoney.com/YYYbC9";
+let API_URL = 'https://40cb-2001-ee0-78c9-da10-cad9-d2ff-fe31-f9a4.ngrok-free.app/api';
 
 // Tạo session ID và lưu vào localStorage
 function getOrCreateSessionId() {
@@ -14,10 +12,18 @@ function getOrCreateSessionId() {
     return sessionId;
 }
 
-// Mở trang xác thực link
+// Mở link xác thực
 function openVerificationLink(link) {
-    const sessionId = getOrCreateSessionId();
-    window.open(`${link}?session_id=${sessionId}`, '_blank');
+    const newWindow = window.open(link, '_blank');
+    
+    // Kiểm tra khi tab đóng
+    const checkClosed = setInterval(() => {
+        if (newWindow.closed) {
+            clearInterval(checkClosed);
+            // Kiểm tra lại trạng thái sau khi đóng tab
+            setTimeout(() => checkAllLinksStatus(), 2000);
+        }
+    }, 500);
 }
 
 // Kiểm tra trạng thái truy cập link
@@ -51,7 +57,7 @@ function updateLinkStatus(link, accessed) {
                 element.innerHTML = `<i class="fas fa-check"></i> Đã truy cập`;
                 element.classList.add('accessed');
             } else {
-                element.innerHTML = `Truy cập ${link === LINK_1 ? 'Link 1' : 'Link 2'}`;
+                element.innerHTML = `Truy cập ${element.textContent.includes('Link 1') ? 'Link 1' : 'Link 2'}`;
                 element.classList.remove('accessed');
             }
         }
@@ -60,11 +66,17 @@ function updateLinkStatus(link, accessed) {
 
 // Kiểm tra trạng thái tất cả link
 async function checkAllLinksStatus() {
-    const link1Status = await checkLinkStatus(LINK_1);
-    updateLinkStatus(LINK_1, link1Status);
+    const link1Btn = document.getElementById('link1-btn');
+    const link2Btn = document.getElementById('link2-btn');
     
-    const link2Status = await checkLinkStatus(LINK_2);
-    updateLinkStatus(LINK_2, link2Status);
+    const link1 = link1Btn.getAttribute('data-link');
+    const link2 = link2Btn.getAttribute('data-link');
+    
+    const link1Status = await checkLinkStatus(link1);
+    updateLinkStatus(link1, link1Status);
+    
+    const link2Status = await checkLinkStatus(link2);
+    updateLinkStatus(link2, link2Status);
     
     // Cập nhật trạng thái nút "Nhận Key"
     const generateKeyBtn = document.getElementById('generate-key-btn');
@@ -122,12 +134,14 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('session-info').textContent = sessionId;
     
     // Gán sự kiện cho các nút
-    document.getElementById('link1-btn').addEventListener('click', () => {
-        openVerificationLink(LINK_1);
+    document.getElementById('link1-btn').addEventListener('click', function() {
+        const link = this.getAttribute('data-link');
+        openVerificationLink(link);
     });
     
-    document.getElementById('link2-btn').addEventListener('click', () => {
-        openVerificationLink(LINK_2);
+    document.getElementById('link2-btn').addEventListener('click', function() {
+        const link = this.getAttribute('data-link');
+        openVerificationLink(link);
     });
     
     document.getElementById('generate-key-btn').addEventListener('click', generateKey);
