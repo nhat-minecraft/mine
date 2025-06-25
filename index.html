@@ -83,21 +83,28 @@
             color: #4da6ff;
         }
         
-        .link {
+        .link-btn {
             display: block;
+            width: 100%;
             padding: 15px;
             background: rgba(255, 255, 255, 0.1);
+            border: none;
             border-radius: 8px;
-            margin: 15px 0;
             color: #4da6ff;
-            word-break: break-all;
-            text-decoration: none;
+            font-size: 1rem;
+            cursor: pointer;
             transition: all 0.3s;
+            margin: 15px 0;
         }
         
-        .link:hover {
+        .link-btn:hover {
             background: rgba(255, 255, 255, 0.15);
             transform: translateY(-3px);
+        }
+        
+        .link-btn.accessed {
+            background: rgba(76, 175, 80, 0.2) !important;
+            color: #4CAF50 !important;
         }
         
         .btn {
@@ -115,9 +122,32 @@
             margin-top: 20px;
         }
         
-        .btn:hover {
+        .btn:hover:not(:disabled) {
             transform: translateY(-3px);
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            background: linear-gradient(135deg, #9e9e9e, #616161) !important;
+        }
+        
+        .btn.active {
+            background: linear-gradient(135deg, #4CAF50, #2E7D32) !important;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.4);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(76, 175, 80, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(76, 175, 80, 0);
+            }
         }
         
         .info-box {
@@ -149,6 +179,21 @@
             font-size: 0.9rem;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
@@ -169,37 +214,33 @@
             </ol>
         </div>
         
-     
-    <div class="links-container">
-        <div class="link-card">
-            <h3><i class="fas fa-link"></i> Link 1</h3>
-            <a href="{{ links[0] }}?session_id={{ session_id }}" class="link" target="_blank">
-                {{ links[0] }}
-            </a>
-            <p>Nhấn để mở link 1 trong tab mới</p>
+        <div class="links-container">
+            <div class="link-card">
+                <h3><i class="fas fa-link"></i> Link 1</h3>
+                <button id="link1-btn" class="link-btn" data-link="https://yeumoney.com/r/link1">
+                    Truy cập Link 1
+                </button>
+                <p>Nhấn để mở link 1 trong tab mới</p>
+            </div>
+            
+            <div class="link-card">
+                <h3><i class="fas fa-link"></i> Link 2</h3>
+                <button id="link2-btn" class="link-btn" data-link="https://yeumoney.com/r/link2">
+                    Truy cập Link 2
+                </button>
+                <p>Nhấn để mở link 2 trong tab mới</p>
+            </div>
         </div>
         
-        <div class="link-card">
-            <h3><i class="fas fa-link"></i> Link 2</h3>
-            <a href="{{ links[1] }}?session_id={{ session_id }}" class="link" target="_blank">
-                {{ links[1] }}
-            </a>
-            <p>Nhấn để mở link 2 trong tab mới</p>
-        </div>
-    </div>
-    
-
-        
-        <div style="text-align: center;">
-            <a href="{{ url_for('get_key', session_id=session_id) }}" class="btn">
-                <i class="fas fa-key"></i> Nhận Key Sau Khi Vượt Link
-            </a>
+        <div style="text-align: center; margin-top: 30px;">
+            <button id="generate-key-btn" class="btn" disabled>
+                <i class="fas fa-key"></i> Vui lòng truy cập đủ 2 link
+            </button>
         </div>
         
         <div class="info-box">
             <p><i class="fas fa-info-circle"></i> Thông tin phiên:</p>
-            <div class="session-info">{{ session_id }}</div>
-            <p>- Mỗi phiên chỉ có hiệu lực trong 24 giờ</p>
+            <div id="session-info" class="session-info"></div>
             <p>- Bạn cần truy cập cả 2 link để nhận key</p>
             <p>- Key sẽ hết hạn sau 24 giờ</p>
         </div>
@@ -209,14 +250,7 @@
         </footer>
     </div>
 
-<div style="text-align: center; margin-top: 30px;">
-    <button onclick="generateKey()" class="btn">
-        <i class="fas fa-key"></i> Nhận Key Ngay
-    </button>
-</div>
-
-<script src="script.js"></script>
-
+    <script src="script.js"></script>
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </body>
 </html>

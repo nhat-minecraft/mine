@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xác thực Link 1</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #2a4d69, #4b86b4);
+            min-height: 100vh;
+            padding: 20px;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            max-width: 600px;
+            width: 100%;
+            background: rgba(0, 15, 30, 0.85);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            text-align: center;
+        }
+        
+        header {
+            text-align: center;
+            padding: 20px 0;
+            margin-bottom: 20px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        .message {
+            padding: 20px;
+            border-radius: 10px;
+            margin: 30px 0;
+            font-size: 1.1rem;
+            background: rgba(0, 30, 60, 0.5);
+        }
+        
+        .loading {
+            font-size: 1.2rem;
+            margin: 20px 0;
+        }
+        
+        .success {
+            background: rgba(50, 200, 50, 0.2);
+            color: #64ff64;
+        }
+        
+        .error {
+            background: rgba(200, 50, 50, 0.2);
+            color: #ff6464;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 25px;
+            background: linear-gradient(135deg, #4da6ff, #0066cc);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            margin-top: 20px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-check-circle"></i> Xác Thực Link 1</h1>
+            <p>Đang xác minh truy cập của bạn...</p>
+        </header>
+        
+        <div class="loading">
+            <i class="fas fa-spinner fa-spin"></i> Đang xử lý
+        </div>
+        
+        <div id="result-message" class="message" style="display: none;">
+            <p id="message-text"></p>
+        </div>
+        
+        <div id="redirect-section" style="display: none;">
+            <p>Bạn sẽ được chuyển hướng tự động sau <span id="countdown">5</span> giây</p>
+            <a id="redirect-btn" href="#" class="btn">
+                <i class="fas fa-arrow-right"></i> Quay về trang chủ ngay
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Lấy session_id từ URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const sessionId = urlParams.get('session_id');
+        
+        // Lưu session_id vào localStorage
+        if (sessionId) {
+            localStorage.setItem('session_id', sessionId);
+        }
+        
+        // Gọi API xác thực truy cập
+        async function verifyAccess() {
+            try {
+                const response = await fetch('http://YOUR_PUBLIC_IP:5000/api/verify-link', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ 
+                        url: window.location.href.split('?')[0], // Lấy URL hiện tại không bao gồm query
+                        session_id: sessionId
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    showResult('Xác thực thành công! Truy cập của bạn đã được ghi nhận.', 'success');
+                } else {
+                    showResult('Lỗi: ' + (data.message || 'Không thể xác thực truy cập'), 'error');
+                }
+            } catch (error) {
+                showResult('Lỗi kết nối đến server. Vui lòng thử lại sau.', 'error');
+            }
+        }
+        
+        // Hiển thị kết quả
+        function showResult(message, type) {
+            document.querySelector('.loading').style.display = 'none';
+            
+            const messageElement = document.getElementById('message-text');
+            messageElement.textContent = message;
+            
+            const resultMessage = document.getElementById('result-message');
+            resultMessage.className = `message ${type}`;
+            resultMessage.style.display = 'block';
+            
+            const redirectSection = document.getElementById('redirect-section');
+            redirectSection.style.display = 'block';
+            
+            // Thiết lập chuyển hướng
+            const countdownElement = document.getElementById('countdown');
+            const redirectBtn = document.getElementById('redirect-btn');
+            redirectBtn.href = `index.html?session_id=${sessionId}`;
+            
+            let seconds = 5;
+            const countdown = setInterval(() => {
+                seconds--;
+                countdownElement.textContent = seconds;
+                
+                if (seconds <= 0) {
+                    clearInterval(countdown);
+                    window.location.href = redirectBtn.href;
+                }
+            }, 1000);
+            
+            redirectBtn.addEventListener('click', () => {
+                clearInterval(countdown);
+                window.location.href = redirectBtn.href;
+            });
+        }
+        
+        // Bắt đầu xác thực khi trang tải xong
+        document.addEventListener('DOMContentLoaded', verifyAccess);
+    </script>
+    
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</body>
+</html>
