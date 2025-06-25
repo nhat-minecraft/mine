@@ -124,10 +124,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let verificationStarted = false;
     const refParam = new URLSearchParams(window.location.search).get('ref');
 
-    // Kiểm tra xem có tham số ref=yeumoney không
-    if (refParam !== 'nhat-minecraft.github.io') {
-        showResult('Truy cập không hợp lệ. Vui lòng truy cập qua link chính thức.', 'error');
-    } else {
         // Kiểm tra nếu đây là lần đầu truy cập
         const accessKey = `link1_accessed_${new Date().toDateString()}`;
         if (sessionStorage.getItem(accessKey)) {
