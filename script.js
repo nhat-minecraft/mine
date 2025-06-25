@@ -1,5 +1,5 @@
 // script.js
-let API_URL = 'https://40cb-2001-ee0-78c9-da10-cad9-d2ff-fe31-f9a4.ngrok-free.app/api';
+let API_URL = 'https://ba9e-2001-ee0-78c9-da10-cad9-d2ff-fe31-f9a4.ngrok-free.app/api';
 
 // Tạo session ID và lưu vào localStorage
 function getOrCreateSessionId() {
