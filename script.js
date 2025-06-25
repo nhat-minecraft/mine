@@ -14,7 +14,7 @@ function getOrCreateSessionId() {
 
 // Mở link xác thực
 function openVerificationLink(link) {
-    const newWindow = window.open(link, '_blank');
+    const win = window.open(link, '_blank');
     
     // Kiểm tra khi tab đóng
     const checkClosed = setInterval(() => {
