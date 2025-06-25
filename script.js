@@ -12,19 +12,23 @@ function getOrCreateSessionId() {
     return sessionId;
 }
 
-// Mở link xác thực
+// Mở link xác thực - ĐÃ SỬA LỖI BIẾN
 function openVerificationLink(link) {
     const win = window.open(link, '_blank');
     
+    if (!win) {
+        alert('Vui lòng cho phép mở popup để tiếp tục');
+        return;
+    }
+    
     // Kiểm tra khi tab đóng
     const checkClosed = setInterval(() => {
-        if (newWindow.closed) {
+        if (win.closed) {  // Sửa newWindow thành win
             clearInterval(checkClosed);
             // Kiểm tra lại trạng thái sau khi đóng tab
-            setTimeout(() => checkAllLinksStatus(), 2000);
+            setTimeout(() => checkAllLinksStatus(), 1000);
         }
     }, 500);
-
 }
 
 // Kiểm tra trạng thái truy cập link
@@ -58,7 +62,9 @@ function updateLinkStatus(link, accessed) {
                 element.innerHTML = `<i class="fas fa-check"></i> Đã truy cập`;
                 element.classList.add('accessed');
             } else {
-                element.innerHTML = `Truy cập ${element.textContent.includes('Link 1') ? 'Link 1' : 'Link 2'}`;
+                // Sửa để hiển thị chính xác tên link
+                const linkName = element.textContent.includes('Link 1') ? 'Link 1' : 'Link 2';
+                element.innerHTML = `Truy cập ${linkName}`;
                 element.classList.remove('accessed');
             }
         }
