@@ -1,7 +1,7 @@
 // script.js
 let API_URL = 'http://14.167.71.156:5000/api';
-const LINK_1 = "https://yeumoney.com/r/link1";
-const LINK_2 = "https://yeumoney.com/r/link2";
+const LINK_1 = "https://yeumoney.com/x8N-Vex";
+const LINK_2 = "https://yeumoney.com/YYYbC9";
 
 // Tạo session ID và lưu vào localStorage
 function getOrCreateSessionId() {
