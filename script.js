@@ -24,6 +24,15 @@ function openVerificationLink(link) {
             setTimeout(() => checkAllLinksStatus(), 2000);
         }
     }, 500);
+
+    const refParam = '?ref=yeumoney';
+    const verifyUrl = linkId === 1 ? 
+        'verify1.html' + refParam : 
+        'verify2.html' + refParam;
+    
+    const newWindow = window.open(verifyUrl, '_blank');
+    
+
 }
 
 // Kiểm tra trạng thái truy cập link

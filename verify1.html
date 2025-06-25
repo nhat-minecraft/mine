@@ -113,6 +113,32 @@
     </div>
 
 <script>
+
+document.addEventListener('DOMContentLoaded', () => {
+    // KIỂM TRA TRANG ĐÃ ĐƯỢC TẢI TRƯỚC ĐÓ
+    if (performance.navigation.type === 1) {
+        showResult('Không thể làm mới trang. Vui lòng truy cập lại từ đầu.', 'error');
+        return;
+    }
+
+    let verificationStarted = false;
+    const refParam = new URLSearchParams(window.location.search).get('ref');
+
+    // Kiểm tra xem có tham số ref=yeumoney không
+    if (refParam !== 'yeumoney') {
+        showResult('Truy cập không hợp lệ. Vui lòng truy cập qua link chính thức.', 'error');
+    } else {
+        // Kiểm tra nếu đây là lần đầu truy cập
+        const accessKey = `link1_accessed_${new Date().toDateString()}`;
+        if (sessionStorage.getItem(accessKey)) {
+            showResult('Bạn đã truy cập link này hôm nay. Không thể xác thực lại.', 'error');
+        } else {
+            verificationStarted = true;
+            sessionStorage.setItem(accessKey, '1');
+            verifyAccess();
+        }
+    }
+
     // Lấy session_id từ localStorage
     const sessionId = localStorage.getItem('session_id');
     
