@@ -35,7 +35,7 @@ function openVerificationLink(link) {
 async function checkLinkStatus(link) {
     try {
         const sessionId = getOrCreateSessionId();
-        const response = await fetch(`${API_URL}/check-link-status`, {
+        const response = await fetch(`${https://api.1amsleep.xyz/api}/check-link-status`, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({ 
@@ -112,7 +112,7 @@ async function generateKey() {
     }
     
     try {
-        const response = await fetch(`${API_URL}/generate-key`, {
+        const response = await fetch(`${https://api.1amsleep.xyz/api}/generate-key`, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({ session_id: sessionId })
