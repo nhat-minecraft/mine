@@ -20,6 +20,12 @@ function openVerificationLink(link) {
         alert('Vui lòng cho phép mở popup để tiếp tục');
         return;
     }
+    const token = Math.random().toString(36).substring(2, 16);
+    sessionStorage.setItem(`verify_token_${linkId}`, token);
+    
+    const verifyUrl = `verify${linkId}.html?token=${token}`;
+    const win = window.open(verifyUrl, '_blank');
+    
     
     // Kiểm tra khi tab đóng
     const checkClosed = setInterval(() => {
@@ -155,4 +161,13 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Kiểm tra trạng thái link
     checkAllLinksStatus();
+document.getElementById('link1-btn').addEventListener('click', function() {
+    const link = this.getAttribute('data-link');
+    openVerificationLink(link, 1);
+});
+
+document.getElementById('link2-btn').addEventListener('click', function() {
+    const link = this.getAttribute('data-link');
+    openVerificationLink(link, 2);
+});
 });
