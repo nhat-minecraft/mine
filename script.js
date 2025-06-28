@@ -1,3 +1,4 @@
+
 // script.js
 let API_URL = 'https://api.1amsleep.xyz/api';
 
@@ -12,26 +13,23 @@ function getOrCreateSessionId() {
     return sessionId;
 }
 
-// Mở link xác thực - ĐÃ SỬA LỖI BIẾN
-function openVerificationLink(link) {
-    const win = window.open(link, '_blank');
-    
-    if (!win) {
-        alert('Vui lòng cho phép mở popup để tiếp tục');
-        return;
-    }
+// Mở link xác thực - ĐÃ SỬA LỖI
+function openVerificationLink(link, linkId) {
     const token = Math.random().toString(36).substring(2, 16);
     sessionStorage.setItem(`verify_token_${linkId}`, token);
     
     const verifyUrl = `verify${linkId}.html?token=${token}`;
     const win = window.open(verifyUrl, '_blank');
     
+    if (!win) {
+        alert('Vui lòng cho phép mở popup để tiếp tục');
+        return;
+    }
     
     // Kiểm tra khi tab đóng
     const checkClosed = setInterval(() => {
-        if (win.closed) {  // Sửa newWindow thành win
+        if (win.closed) {
             clearInterval(checkClosed);
-            // Kiểm tra lại trạng thái sau khi đóng tab
             setTimeout(() => checkAllLinksStatus(), 1000);
         }
     }, 500);
@@ -41,7 +39,7 @@ function openVerificationLink(link) {
 async function checkLinkStatus(link) {
     try {
         const sessionId = getOrCreateSessionId();
-        const response = await fetch(`${https://api.1amsleep.xyz/api}/check-link-status`, {
+        const response = await fetch(`${API_URL}/check-link-status`, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({ 
@@ -60,7 +58,7 @@ async function checkLinkStatus(link) {
 
 // Cập nhật giao diện cho link
 function updateLinkStatus(link, accessed) {
-    const linkElements = document.querySelectorAll(`.link-btn`);
+    const linkElements = document.querySelectorAll('.link-btn');
     
     linkElements.forEach(element => {
         if (element.dataset.link === link) {
@@ -68,7 +66,6 @@ function updateLinkStatus(link, accessed) {
                 element.innerHTML = `<i class="fas fa-check"></i> Đã truy cập`;
                 element.classList.add('accessed');
             } else {
-                // Sửa để hiển thị chính xác tên link
                 const linkName = element.textContent.includes('Link 1') ? 'Link 1' : 'Link 2';
                 element.innerHTML = `Truy cập ${linkName}`;
                 element.classList.remove('accessed');
@@ -118,7 +115,7 @@ async function generateKey() {
     }
     
     try {
-        const response = await fetch(`${https://api.1amsleep.xyz/api}/generate-key`, {
+        const response = await fetch(`${API_URL}/generate-key`, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({ session_id: sessionId })
@@ -146,28 +143,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const sessionId = getOrCreateSessionId();
     document.getElementById('session-info').textContent = sessionId;
     
-    // Gán sự kiện cho các nút
+    // Gán sự kiện cho các nút - ĐÃ SỬA LỖI
     document.getElementById('link1-btn').addEventListener('click', function() {
         const link = this.getAttribute('data-link');
-        openVerificationLink(link);
+        const linkId = this.getAttribute('data-link-id');
+        openVerificationLink(link, linkId);
     });
     
     document.getElementById('link2-btn').addEventListener('click', function() {
         const link = this.getAttribute('data-link');
-        openVerificationLink(link);
+        const linkId = this.getAttribute('data-link-id');
+        openVerificationLink(link, linkId);
     });
     
     document.getElementById('generate-key-btn').addEventListener('click', generateKey);
     
     // Kiểm tra trạng thái link
     checkAllLinksStatus();
-document.getElementById('link1-btn').addEventListener('click', function() {
-    const link = this.getAttribute('data-link');
-    openVerificationLink(link, 1);
-});
-
-document.getElementById('link2-btn').addEventListener('click', function() {
-    const link = this.getAttribute('data-link');
-    openVerificationLink(link, 2);
-});
 });

@@ -113,46 +113,38 @@
     </div>
 
 <script>
-
 document.addEventListener('DOMContentLoaded', () => {
-    // KIỂM TRA TRANG ĐÃ ĐƯỢC TẢI TRƯỚC ĐÓ
+    // Kiểm tra token bảo mật
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get('token');
+    const validToken = sessionStorage.getItem('verify_token_1') === token;
+
+    if (!validToken) {
+        showResult('Truy cập không hợp lệ. Vui lòng sử dụng nút từ trang chủ.', 'error');
+        return;
+    }
+
+    // Xóa token sau khi sử dụng
+    sessionStorage.removeItem('verify_token_1');
+
+    // Thay thế history state (xóa token khỏi URL)
+    history.replaceState(null, '', window.location.pathname);
+
+    // Kiểm tra nếu trang được refresh
     if (performance.navigation.type === 1) {
         showResult('Không thể làm mới trang. Vui lòng truy cập lại từ đầu.', 'error');
         return;
     }
 
-    // Kiểm tra nếu đây là lần đầu truy cập
+    // Kiểm tra nếu đây là lần đầu truy cập trong ngày
     const accessKey = `link1_accessed_${new Date().toDateString()}`;
     if (sessionStorage.getItem(accessKey)) {
         showResult('Bạn đã truy cập link này hôm nay. Không thể xác thực lại.', 'error');
     } else {
         sessionStorage.setItem(accessKey, '1');
         verifyAccess();
-    // Tạo token bảo mật
-    const generateToken = () => {
-        return Math.random().toString(36).substring(2, 15) + 
-               Math.random().toString(36).substring(2, 15);
-    };
-
-    // Kiểm tra referrer và token
-    const validReferrer = document.referrer.includes("index.html");
-    const urlParams = new URLSearchParams(window.location.search);
-    const token = urlParams.get('token');
-    const validToken = sessionStorage.getItem('verify_token') === token;
-
-    if (!validReferrer || !validToken) {
-        showResult('Truy cập không hợp lệ. Vui lòng sử dụng nút từ trang chủ.', 'error');
-        return;
     }
-
-    // Xóa token sau khi sử dụng
-    sessionStorage.removeItem('verify_token');
-
-    // Thay thế history state
-    history.replaceState(null, '', window.location.pathname);
-
-    }
-}); // ĐÂY LÀ DẤU NGOẶC ĐÓNG CỦA DOMContentLoaded - KHÔNG ĐƯỢC XÓA
+});
 
 // Lấy session_id từ localStorage
 let sessionId = localStorage.getItem('session_id');
@@ -175,13 +167,6 @@ async function verifyAccess() {
                 session_id: sessionId
             })
         });
-function openVerificationLink(link) {
-    const token = generateToken();
-    sessionStorage.setItem('verify_token', token);
-    const verifyUrl = `verify1.html?token=${token}`;
-    const win = window.open(verifyUrl, '_blank');
-    // ... phần còn lại ...
-}
         
         const data = await response.json();
         if (data.status === 'success') {
@@ -229,7 +214,6 @@ function showResult(message, type) {
         clearInterval(countdown);
         window.location.href = redirectBtn.href;
     });
-
 }
 </script>
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">

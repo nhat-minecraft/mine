@@ -1,0 +1,13 @@
+wait checkLinkStatus(lin
+  updateLinkStatulink link1Stat
+       const link2Sait kLinkStus(link2);
+  updateLinkStatus(link2,in);
+       // Cập nhật trạng thút "Nhận Key"
+  const generateKeyBtn = cume.getElementById('generate-key-btn');
+  if (link1Status && li2Status)
+      generateKeyBtn.sabled = fals
+      generateKeyBtinnerHTML = `<i class="fas fa-key"></i> Nhận Key N    nerateKeyn.classList.add('active');
+    
+        generateKeyBtn.disabled = tru
+        generateKeyBtn.innerHTML = `<i class="fas fa-key"></i> Vui lòng truy cập đủ 2 li   generateKeyBtn.classList.remove('active');
+    }
